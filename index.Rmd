@@ -68,6 +68,247 @@ Par comparaison avec le jeu de lego, cela revient à effectuer des constructions
 
 
 
+# R-BASE : Projet, Programme R, Document Rmd
+
+>- Au commencement, Dieu créa le ciel et la terre.
+>- Or la terre était vide et vague, les ténèbres couvraient l'abîme, un vent de Dieu tournoyait sur les eaux.
+>- Dieu dit : Que la lumière soit et la lumière fut. 
+
+## Projet 
+
+Si l'on veut s'épargner bien des désagréments dans l'apprentissage de R, il faut prendre dès le départ de bonnes habitudes. Parmi celles-ci, l'une des plus importantes est le fait d'inscrire toujours son travail dans le cadre d'un **projet R** c'est-à-dire - en simplifiant beaucoup - un **répertoire de travail** contenant l'ensemble des données, programmes, résultats... que l'on pourra par la suite compresser, archiver et transmettre à quelqu'un d'autre. 
+
+### Lancement de R studio
+
+Sauf à être complètement masochiste, on n'utilise jamais **R** directement mais on lance d'abord l'interface **R-Studio** qui facilite conisdérablement l'ensemble des opérations et offre une gamme considérable de services. Il ne faut toutefois pas confondre les deux et il serait par exemple ridicule d'indiquer sur un CV en vue d'un emploi de statisticien que l'on sait utiliser R-studio en oubliant de préciser que l'on maîtrise R. 
+
+
+### Création d'un projet 
+
+Pour créer un projet on utilise le menus déroulant *File/new project/ ...* et on définit un dossier de notre ordinateur (existant ou à créer) qui contiendra le projet. Une fois l'opération effectuée, on pourra constater que ce dossier contient un fichier *xxx.Rproj* ou xxx est en principe le nom du dossier dans lequel vous avez stocké le projet.
+
+Ce fichier contient toute une série d'informations dont nous ne parlerons pas dans ce cours d'initiation mais qui, pour faire simple, définissent un ensemble de réglages du logiciel et de préférences de l'utilisateur. 
+
+Si vous fermez Rstudio (faites-le !) il vous suffira pour reprendre votre travail là où vous vous étiez arrêté :
+
+- de lancer R-studio et de cliquer sur *File/open project/...* suivi du nom du fichier xxx.Rproj
+- ou plus simplement encore de double cliquer sur le fichier xxx.Rproj ce qui lancera automatiquement Rstudio
+
+Le dossier contenant votre projet R peut être organisé à votre convenance. Certains mettent tout les fichier pêle-mêle dans le dossier. D'autres préfèrent créer des sous-dossiers contenant des données, des programmes, des résultats, des figures. Vous déciderez à l'usage de ce qui vous convient le mieux, mais le point important est que **tout ce qui entre ou sort de vos programmes R doit être de préférence stocké dans le répertoire du projet**. 
+
+```{r}
+knitr::include_graphics("figures/monprojet.png")
+```
+
+
+## Programme
+
+La fonction initiale d'un langage de programmation comme R est ... de créer des **programmes** c'est-à-dire des ensembles d'instruction permettant d'accomplir une tâche à l'intérieur d'une chaîne de production. Dans le cas d'un logiciel spécialisé dans l'analyse statistique, il s'agira donc de partir de données (statistiques, géographiques, textuelles, ...) pour aboutir à des résultats prenant la forme de tableaux, cartes ou graphiques. Il ne s'agit donc en somme que d'une étape du travail de recherche où le principal avantage de R est d'**automatiser une tâche** et de faciliter sa **reproduction ultérieure** avec en arrière plan un objectif de **productivité** puisque l'ordinateur réalise en quelques millisecondes des tâches qui prendraient des heures avec un logiciel click-bouton de type Excel. 
+
+
+```{r}
+knitr::include_graphics("figures/ProgrammeR.png")
+```
+
+Prenons un exemple simple de problème facile à résoudre avec R mais plus compliqué avec des logiciels click-boutons. Il s'agit d'un exemple pédagogique tiré d'un [très vieux cours d'analyse spatiale](!http://grasland.script.univ-paris-diderot.fr/go303/ch1/ch1.htm) portant sur les semis de point et les localisations optimales.
+
+> On considère 5 station services localisés à l'intérieur d'une ville à plan en damier qui livrent chacune la même quantité de carburant par semaine aux clients. Où faut-il localiser les deux infrastructures suivantes : 
+> - un dépôt de carburant permettant d'alimenter les cinq stations qui doit minimiser la distance moyenne de livraison.
+> - une caserne de pompier qui doit pouvoir intervenir rapidement sur toute les stations et qui doit minimiser la distance maximale à la station la plus éloignée. 
+
+```{r}
+knitr::include_graphics("figures/access.png")
+```
+
+On constitue deux équipes d'étudiants, certains utilisant un programme R et d'autres Excel. On se propose de voir qui ira le plus vite :
+
+
+### Round 1. Saisie des données et affichage du tableau
+
+On crée un programme R avec *File/New File/R Script* puis on l'enregistre avec *File/Save/ ...* suivi du nom du programme.
+
+```{r}
+# Saisie des variables
+CODE <- c("A","B","C","D","E")
+X <- c(10,20,40,50,180)
+Y <- c(40,60,40,60,50)
+
+# Regroupement dans un tableau
+coo <- data.frame(X,Y)
+
+# Ajout du nom des lignes
+row.names(coo) <- CODE
+
+# Affichage du tableau
+coo
+```
+Normalement, les étudiants qui utilisent un tableur ont du aller plus vite et Excel mène sur R par 1-0
+
+
+### Round 2. Affichage de la carte
+
+Vous devez essayez de reproduire l'image correspondant au problème posé 
+
+```{r}
+plot(X,Y, 
+     col="red", 
+     pch=20, 
+     xlim=c(0,180),
+     ylim=c(0,90),
+     asp = 1)
+text(X,Y,
+     labels = CODE, 
+     pos = 2)
+
+```
+La création d'un graphique est à première vue plus facile avec un logiciel click-bouton. L'avantage est très clairement pour Excel qui mène désormais 2 à 0.
+
+### Round 3. Calcul de la station la plus accessible à vol d'oiseau (distance euclidienne)
+
+Vous devez calculer une matrice de **distance euclidienne** entre toutes les stations et trouver la plus accessible.
+
+```{r}
+
+# calcul la matrice de distance euclidienne
+mat<-dist(coo, upper = T, method = "euclidean")
+mat
+
+# distance moyenne
+apply(as.matrix(mat),1,mean)
+```
+Là, je parie que les utilisateurs d'Excel ont eu un peu plus de mal ... En tous les cas, Excel ne mèneplus que par 2 à 1
+
+
+### Round 4. Calcul de la station la plus accessible par la route (distance de Manhattan)
+
+Vous devez calculer une matrice de distance de Manhattan entre toutes les stations et trouver la plus accessible.
+
+```{r}
+
+# calcul la matrice de distance de Manhattan
+mat<-dist(coo,upper = T, method = "manhattan")
+mat
+
+# distance moyenne de Manhattan
+apply(as.matrix(mat),1,mean)
+```
+
+Je reconnais que c'est unpeu facile, mais à nouveau R l'emporte ce qui fait désormais match nul 2-2
+
+
+### Round 5. Localisation du dépôt de carburant
+
+Dans le cas particulier de la distance de Manhattan, le calcul du point le plus proche de tous les autres s'obtient facilement en calculant le point médian dont les coordonnées correspondent à la médiane de X et la médiane de Y.
+
+```{r}
+medX <- median(X)
+medX
+medY <- median(Y)
+medY
+
+```
+
+A priori, le calcul est aussi facile dans R et dans Excel : match nul 3-3
+
+
+### Round 6. Localisation de la caserne de pompiers
+
+Dans le cas particulier de la distance de Manhattan, le calcul du point minimisant la distance maximale s'obtient en trouvant le centre du diamètre minimal en X et en Y. Il s'agit de la localisation la plus **équitable** où le plus défavorisé est le moins défavorisé possible. 
+
+```{r}
+equX <- (max(X)+min(X))/2
+equX
+equY <- (max(Y)+min(Y))/2
+equY
+
+
+```
+
+A priori, le calcul est toujours aussi facile dans R et dans Excel : match nul 4-4
+
+
+### Round 7. Visualisation des deux points sur la carte
+
+On va placer en bleu le point médian et en vert le point le plus équitable. Dans le cas de R on peut recopier les lignes de code du graphique du round n°2 ce qui gagne désormais du temps :
+
+```{r}
+# Programme antérieur
+plot(X,Y, 
+     col="red", 
+     pch=20, 
+     xlim=c(0,180),
+     ylim=c(0,90),
+     asp = 1)
+text(X,Y,
+     labels = CODE, 
+     pos = 2)
+
+# Ajout du dépôt de carburant
+points(medX, medY, col="blue", pch=3)
+text(medX,medY, "dépot",pos=1)
+
+# Ajout du point médian
+points(equX, equY, col="green", pch=3)
+text(equX,equY, "caserne",pos=1)
+
+
+
+```
+
+Le résultat du match est incertain mais R n'est plus désavantagé puisqu'on peut recycler les lignes de code précédentes pour le graphique de base. Disons 5-5 même s'il y a de fortes chances que R l'emporte.
+
+
+### Dernier round. Refaire toute l'analyse avec une station de plus
+
+Deux stations  F(100,20) et G(150,30) ont été ajoutées. Il faut refaire la carte finale. Cela ne pose aucun problème dans R puisqu'il suffit de modifier l'entrée des données  et récupérer des bouts de programme
+
+```{r}
+# (1) Saisie des variables
+CODE <- c("A","B","C","D","E","F","G")
+X <- c(10,20,40,50,180,100,150)
+Y <- c(40,60,40,60,50,20,30)
+coo <- data.frame(X,Y)
+row.names(coo) <- CODE
+
+
+# (2) calcul des points centraux
+medX <- median(X)
+medY <- median(Y)
+equX <- (max(X)+min(X))/2
+equY <- (max(Y)+min(Y))/2
+
+
+# (3) Graphique
+plot(X,Y, 
+     col="red", 
+     pch=20, 
+     xlim=c(0,180),
+     ylim=c(0,90),
+     asp = 1)
+text(X,Y,
+     labels = CODE, 
+     pos = 2)
+
+# Ajout du dépôt de carburant
+points(medX, medY, col="blue", pch=3)
+text(medX,medY, "Dépôt",pos=1)
+
+# Ajout du point médian
+points(equX, equY, col="green", pch=3)
+text(equX,equY, "Caserne",pos=1)
+
+
+```
+
+Excel n'a aucune chance d'aller plus vite et R remporte le match par KO !
+
+
+## Document R markdown
+
+
+```{r}
+knitr::include_graphics("figures/DocumentRmd.png")
+```
 
 
 
