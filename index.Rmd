@@ -68,13 +68,18 @@ Par comparaison avec le jeu de lego, cela revient à effectuer des constructions
 
 
 
-# R-BASE : Projet, Programme R, Document Rmd
+# R-BASE : GENESE
 
->- Au commencement, Dieu créa le ciel et la terre.
->- Or la terre était vide et vague, les ténèbres couvraient l'abîme, un vent de Dieu tournoyait sur les eaux.
->- Dieu dit : Que la lumière soit et la lumière fut. 
 
-## Projet 
+
+## Rstudio et les projets R
+
+>- Au commencement, les dieux de la statistique créèrent le langage R.
+>- Mais l'interface était vide et vague, 
+>- les ténèbres couvraient les lignes de code
+>- R-Studio dit : Que le projet soit et le projet fut. 
+
+
 
 Si l'on veut s'épargner bien des désagréments dans l'apprentissage de R, il faut prendre dès le départ de bonnes habitudes. Parmi celles-ci, l'une des plus importantes est le fait d'inscrire toujours son travail dans le cadre d'un **projet R** c'est-à-dire - en simplifiant beaucoup - un **répertoire de travail** contenant l'ensemble des données, programmes, résultats... que l'on pourra par la suite compresser, archiver et transmettre à quelqu'un d'autre. 
 
@@ -96,31 +101,43 @@ Si vous fermez Rstudio (faites-le !) il vous suffira pour reprendre votre travai
 
 Le dossier contenant votre projet R peut être organisé à votre convenance. Certains mettent tout les fichier pêle-mêle dans le dossier. D'autres préfèrent créer des sous-dossiers contenant des données, des programmes, des résultats, des figures. Vous déciderez à l'usage de ce qui vous convient le mieux, mais le point important est que **tout ce qui entre ou sort de vos programmes R doit être de préférence stocké dans le répertoire du projet**. 
 
-```{r}
+```{r, echo = FALSE}
 knitr::include_graphics("figures/monprojet.png")
 ```
 
 
-## Programme
+## Programme R : Excel killer ?
+
+>- C'est pourquoi tu quittera Word et Excel, et t'attachera à R studio,
+>- et vous deviendrez une seule chair. 
+
+
 
 La fonction initiale d'un langage de programmation comme R est ... de créer des **programmes** c'est-à-dire des ensembles d'instruction permettant d'accomplir une tâche à l'intérieur d'une chaîne de production. Dans le cas d'un logiciel spécialisé dans l'analyse statistique, il s'agira donc de partir de données (statistiques, géographiques, textuelles, ...) pour aboutir à des résultats prenant la forme de tableaux, cartes ou graphiques. Il ne s'agit donc en somme que d'une étape du travail de recherche où le principal avantage de R est d'**automatiser une tâche** et de faciliter sa **reproduction ultérieure** avec en arrière plan un objectif de **productivité** puisque l'ordinateur réalise en quelques millisecondes des tâches qui prendraient des heures avec un logiciel click-bouton de type Excel. 
 
 
-```{r}
+```{r, echo = FALSE}
 knitr::include_graphics("figures/ProgrammeR.png")
 ```
 
 Prenons un exemple simple de problème facile à résoudre avec R mais plus compliqué avec des logiciels click-boutons. Il s'agit d'un exemple pédagogique tiré d'un [très vieux cours d'analyse spatiale](!http://grasland.script.univ-paris-diderot.fr/go303/ch1/ch1.htm) portant sur les semis de point et les localisations optimales.
 
-> On considère 5 station services localisés à l'intérieur d'une ville à plan en damier qui livrent chacune la même quantité de carburant par semaine aux clients. Où faut-il localiser les deux infrastructures suivantes : 
-> - un dépôt de carburant permettant d'alimenter les cinq stations qui doit minimiser la distance moyenne de livraison.
-> - une caserne de pompier qui doit pouvoir intervenir rapidement sur toute les stations et qui doit minimiser la distance maximale à la station la plus éloignée. 
+On considère une carte papier permettant de localiser 5 station services à l'intérieur d'une ville à plan en damier. Chaque station livre chacune la même quantité de carburant par semaine aux clients. On souhaite répondre aux questions suivantes :
 
-```{r}
+1. Comment saisir les données dans une fichier numérique ?
+2. Comment reproduire la carte papier sous forme d'un graphique ?
+3. Comment calculer la dsitance à vol d'oiseau entre toutes les stations ?
+4. Comment calculer la dsitance routière entre toutes les stations ?
+5. Où localiser un dépôt de carburant permettant d'alimenter les cinq stations en minimisant la distance moyenne de livraison (critère d'efficacite)
+6. Où localiser une caserne de pompier qui doit pouvoir intervenir rapidement sur toute les stations et qui doit minimiser la distance maximale à la station la plus éloignée (critère d'équité).
+7. Comment visualiser ces deux localisations sur la carte des stations ?
+8. Comment reproduire ces tâches rapidement s'il y a des ajouts ou suppressions de stations
+
+```{r echo=FALSE}
 knitr::include_graphics("figures/access.png")
 ```
 
-On constitue deux équipes d'étudiants, certains utilisant un programme R et d'autres Excel. On se propose de voir qui ira le plus vite :
+On constitue deux équipes d'étudiants, certains utilisant un programme R et d'autres Excel. On se propose de voir qui ira le plus vite sur chacune des 8 tâches proposées. 
 
 
 ### Round 1. Saisie des données et affichage du tableau
@@ -303,17 +320,143 @@ text(equX,equY, "Caserne",pos=1)
 Excel n'a aucune chance d'aller plus vite et R remporte le match par KO !
 
 
-## Document R markdown
+## Document Rmd : Word killer ?
 
+
+>- R-Studio dit : « Faisons une interface de rédaction adaptée à notre travail, 
+>- Que l'utilisateur puissent y insérer les tableaux, les graphiques, les cartes, les références bibliographiques, et tous les écrits qui les commentent. »
+
+
+Nous venons de voir comment une bonne pratique de R peut conduire progressivement à abandonner l'usage des tableurs (Excel, Open Office) sauf peut-être pour l'étape de saisie des données. Dès lors qu'il s'agit de réaliser des graphiques ou des calculs statistiques complexes, la rédaction d'un programme se révèle beaucoup plus intéressante même si elle impose un coût initial d'apprentissage.
+
+Mais une bonne pratique de R ou plus précisément des documents  R markdown peut vous conduire beaucoup plus loin et vous amener à abandonner également votre logiciel de traitement de texte (Word) et votre outil de présentation (Power Point). Le coût d'apprentissage est naturellement un peu plus élevé mais les bénéfices sont à la mesure de l'investissement.
+
+Comme le montre la figure ci-dessous, un document R markdown est en quelques sorte un mélange entre des lignes de code R qui executent des tâches et des lignes de texte où sont expliqués les calculs et commentés les résultats obtenus. En d'autres termes, un document R markdown vous permet de rédiger un article de recherche complet, une présentation à une conférence, un syllabus de cours, dans un seul environnement logiciel (R studio). 
+
+Nul besoin de ciseau et de colle pour aller chercher tel tableau ici, tel figure là-bas ou telle carte ailleurs. Tous ces éléments sont intégrs au fur et à mesure de la rédaction ce qui facilite considérablement la concentration. Et surtout - on l'a déjà vu pour le programme R - le document peut facilement être reproduit ou mise à jour sans être obligé de réplique des dizaines de click de souris.   
+
+
+```{r echo=FALSE}
+knitr::include_graphics("figures/DocumentRmd.png")
+```
+Nous allons illustrer l'usage de R markdown en rédigeant une courte note sur la distribution de la population et de certains commerces et services à Rennes. L'exemple est repris du [Manuel d'analyse spatiale publié par l'INSEE en 2018 ](https://www.insee.fr/fr/information/3635442) et plus précisement de son [chapitre 4. Les configurations de points](https://www.insee.fr/fr/statistiques/fichier/3635442/imet131-h-chapitre-4.pdf) 
+
+Comme nous avons pris la perspective de n'employer aucun package R au cours de cette formation initiale, les données ont été légèrement modifiées, notamment pour le tracé de la carte des contours de la ville de Rennes.
+
+
+### Chargement des données
+
+Nous disposons de trois fichiers qui comportent chacun des coordonnées de localisation utilisant la même projection Lambert et que l'on pourra de ce fait superposer. Après les avoir chargés et décrits, on en propose une première visualisation à l'aide des fonctions graphiques de base de R.
+
+
+#### Contour de Rennes
+
+On charge le fichier avec `read.table()` puis on affiche ses premières lignes avec `head()`et on regarde sa taille avec `dim()`
 
 ```{r}
-knitr::include_graphics("figures/DocumentRmd.png")
+map <- read.table(file = "data/rennes/map.csv",
+                  header = T,
+                  sep = ";")
+head(map,2)
+dim(map)
+```
+On affiche le contour avec les instructions `plot()` et `lines()`. On doit impérativement ajouter le paramètre *asp = 1* dans plot() pour imposer une échelle identique sur l'axe vertical et l'axe horizontal. 
+
+```{r}
+plot(map$x,map$y, col="red", asp = 1)
+lines(map$x,map$y, col="blue")
+```
+
+#### Distribution de la population
+
+On charge le fichier de population de la même manière et on constate qu'il comporte une troisième colonne indiquant la population localisée en chaque point. En fait, il s'agit d'une grille de population qui localise les habitants sur une maille de ??? m 
+
+```{r}
+pop <- read.table(file = "data/rennes/popu.csv",
+                  header = T,
+                  sep = ";")
+head(pop,2)
+dim(pop)
+```
+On procède à une première cartographie qui ne tient pas compte de l'effectif de population mais indique juste les cases occupées et inoccupées, ce qui permet de donner une vision générale de l'occuparion du sol et du peuplement de Rennes et de l'espace environnant. 
+
+```{r}
+plot(pop$x,pop$y, col="red", asp = 1,pch=22, cex=0.01)
+lines(map$x,map$y, col="black")
+
+```
+#### Distribution des équipements
+
+L'INSEE a extrait du fichier de la Base Publique des Equipements quatre types de localisations correspondant aux écoles, aux médecins, aux pharmacies et aux commerces de vêtements. On notera l'ajout du paramètre *encoding="UTF-8"* qui permet de lire sans erreur les caractères accentués et d'éviter par exemple que "Vêtements" devienne "VÃªtements".
+
+```{r}
+bpe <- read.table(file = "data/rennes/bpe.csv",
+                  header = T,
+                  sep = ";",
+                  encoding="UTF-8")
+head(bpe,2)
+dim(bpe)
 ```
 
 
+On utilise l'instruction `table()`pour dénombrer l'effectif de chaque équipement :
+
+```{r}
+table(bpe$equ)
+```
+
+Puis on visualise après avoir attribué une couleur à chaque équipement. On crée pour cela une nouvelle variable :
+
+```{r}
+bpe$couleur<-as.factor(bpe$equ)
+levels(bpe$couleur)
+levels(bpe$couleur)<-c("blue","green","orange","red")
+bpe$couleur<-as.character(bpe$couleur)
+table(bpe$couleur)
+```
+
+On peut désormais assembler nos trois couches : 
+
+```{r}
+plot(pop$x,pop$y, col="gray", asp = 1,pch=22, cex=0.01)
+lines(map$x,map$y, col="black")
+points(bpe$x,bpe$y,bg=bpe$couleur, pch=21, cex=0.8)
+```
+
+Il est facile de procéder à un zoom en ajoutant des paramètres *xlim* et *ylim* dans la fonction plot() qui précise l'espace d'étude. 
+
+```{r}
+plot(pop$x,
+     pop$y, 
+     col="gray", 
+     asp = 1,
+     pch=22, 
+     cex=0.1,
+     xlim = c(351000,353000),
+     ylim = c(6788500,6790500))
+
+lines(map$x,
+      map$y, 
+      col="black")
+
+points(bpe$x,
+       bpe$y,
+       bg=bpe$couleur, 
+       pch=21, 
+       cex=0.8)
+```
 
 
-# R-BASE : Variables quantitatives, corrélation, régression, test d'égalité des moyennes 
+OK, notre carte n'a pas de légende (c'est possible mais vraiment compliqué en R-Base) mais on appréciera le fait d'avoir pu la réaliser en ne se servant que de quelques fonctions élémentaires de R comme 
+
+### A vous de jouer !
+
+En vous inspirant de l'exemple des stations services, essayez de définir un certain nombre de questions et tentez d'y répondre ...
+
+
+
+
+# R-BASE : Statistique bivariée I 
 
 Accrochez vos ceintures … on plonge directement dans un programme R qu’il s’agit juste d’exécuter sans comprendre ce qui se passe pour avoir une idée des possibilités du logiciel mais aussi des difficultés. Vous êtes un peu comme un étranger qui entend parler une langue nouvelle et découvre de nouveaux mots et essaye de les reproduire comme dans la méthode Assimil … Evidemment ça ne marche pas à tous les coups. 
 
@@ -862,7 +1005,7 @@ Essayez de reproduire la même analyse sur deux autres variables quantitatives d
 
 
 
-# R-BASE : Variable qualitatives, tableau de contingence, test du chi-2 
+# R-BASE : Statistique bivariée II
 
 On suppose que vous avez acquis les premiers réflexes de programmation en R avec les variables quantitatives contenues dans le fichier Europe 1988. VOus y avez appris à expliquer une variable Y  quantitative par une variable X pouvant être soit qualitative (analyse de variance, test d'égalité des moyennes), soit quantitative (corrélation, régression)
 
