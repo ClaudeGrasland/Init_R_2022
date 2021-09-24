@@ -1,0 +1,132 @@
+---
+title: "Exo2"
+author: "Claude Grasland"
+date: "9/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Le premier but de cet exercice est de mettre en application les premières connaissances acquises sur le langage R  dans l'exo 1 sur un exemple réel.
+
+Le second but de l'exercie est d'apprendre à créer un document R markdown qui mélange fragments de code R et textes rédigés.
+
+Nous allons illustrer l'usage de R markdown en rédigeant une courte note sur la distribution de la population et de certains commerces et services à Rennes. L'exemple est repris du [Manuel d'analyse spatiale publié par l'INSEE en 2018 ](https://www.insee.fr/fr/information/3635442) et plus précisement de son [chapitre 4. Les configurations de points](https://www.insee.fr/fr/statistiques/fichier/3635442/imet131-h-chapitre-4.pdf) 
+
+Comme nous avons pris la perspective de n'employer aucun package R au cours de cette formation initiale, les données ont été légèrement modifiées, notamment pour le tracé de la carte des contours de la ville de Rennes.
+
+# Chargement des données
+
+Nous disposons de trois fichiers qui comportent chacun des coordonnées de localisation utilisant la même projection Lambert et que l'on pourra de ce fait superposer. Après les avoir chargés et décrits, on en propose une première visualisation à l'aide des fonctions graphiques de base de R.
+
+
+## Contour de Rennes
+
+On charge le fichier avec `read.table()` puis on affiche ses premières lignes avec `head()`et on regarde sa taille avec `dim()`
+
+```{r}
+map <- read.table(file = "data/rennes/map.csv",
+                  header = T,
+                  sep = ";")
+head(map,2)
+dim(map)
+```
+
+On affiche le contour avec les instructions `plot()` et `lines()`. On doit impérativement ajouter le paramètre *asp = 1* dans plot() pour imposer une échelle identique sur l'axe vertical et l'axe horizontal. 
+
+```{r}
+plot(map$x,map$y, col="red", asp = 1)
+lines(map$x,map$y, col="blue")
+```
+
+## Distribution de la population
+
+On charge le fichier de population de la même manière et on constate qu'il comporte une troisième colonne indiquant la population localisée en chaque point. En fait, il s'agit d'une grille de population qui localise les habitants sur une maille de ??? m 
+
+```{r}
+pop <- read.table(file = "data/rennes/popu.csv",
+                  header = T,
+                  sep = ";")
+head(pop,2)
+dim(pop)
+```
+
+On procède à une première cartographie qui ne tient pas compte de l'effectif de population mais indique juste les cases occupées et inoccupées, ce qui permet de donner une vision générale de l'occuparion du sol et du peuplement de Rennes et de l'espace environnant. 
+
+```{r}
+plot(pop$x,pop$y, col="red", asp = 1,pch=22, cex=0.01)
+lines(map$x,map$y, col="black")
+
+```
+
+## Distribution des équipements
+
+L'INSEE a extrait du fichier de la Base Publique des Equipements quatre types de localisations correspondant aux écoles, aux médecins, aux pharmacies et aux commerces de vêtements. On notera l'ajout du paramètre *encoding="UTF-8"* qui permet de lire sans erreur les caractères accentués et d'éviter par exemple que "Vêtements" devienne "VÃªtements".
+
+```{r}
+bpe <- read.table(file = "data/rennes/bpe.csv",
+                  header = T,
+                  sep = ";",
+                  encoding="UTF-8")
+head(bpe,2)
+dim(bpe)
+```
+
+
+On utilise l'instruction `table()`pour dénombrer l'effectif de chaque équipement :
+
+```{r}
+table(bpe$equ)
+```
+
+Puis on visualise après avoir attribué une couleur à chaque équipement. On crée pour cela une nouvelle variable :
+
+```{r}
+bpe$couleur<-as.factor(bpe$equ)
+levels(bpe$couleur)
+levels(bpe$couleur)<-c("blue","green","orange","red")
+bpe$couleur<-as.character(bpe$couleur)
+table(bpe$couleur)
+```
+
+On peut désormais assembler nos trois couches : 
+
+```{r}
+plot(pop$x,pop$y, col="gray", asp = 1,pch=22, cex=0.01)
+lines(map$x,map$y, col="black")
+points(bpe$x,bpe$y,bg=bpe$couleur, pch=21, cex=0.8)
+```
+
+Il est facile de procéder à un zoom en ajoutant des paramètres *xlim* et *ylim* dans la fonction plot() qui précise l'espace d'étude. 
+
+```{r}
+plot(pop$x,
+     pop$y, 
+     col="gray", 
+     asp = 1,
+     pch=22, 
+     cex=0.1,
+     xlim = c(351000,353000),
+     ylim = c(6788500,6790500))
+
+lines(map$x,
+      map$y, 
+      col="black")
+
+points(bpe$x,
+       bpe$y,
+       bg=bpe$couleur, 
+       pch=21, 
+       cex=0.8)
+```
+
+
+OK, notre carte n'a pas de légende (c'est possible mais vraiment compliqué en R-Base) mais on appréciera le fait d'avoir pu la réaliser en ne se servant que de quelques fonctions élémentaires de R comme 
+
+# A vous de jouer !
+
+En vous inspirant de l'exemple des stations services, essayez de définir un certain nombre de questions et tentez d'y répondre ...

@@ -1,0 +1,380 @@
+---
+title: "Exo 3"
+author: "Claude Grasland"
+date: "9/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction
+
+On utilise pour un exemple fétiche de l'enseignant, celui des pays d'Europe en 1988 à la veille de la chute du mur de Berlin. Exemple qui a été testé depuis 30 ans sur tous les logiciels de statistique possible (Lotus, Calc, SAS, XLSTAT, SPAD, ....). Il vous est recommandé d'avoir également un exemple fétiche sur lequel vous pourrez tester à votre tour le programme ci-dessous en l'adaptant.
+
+
+# Préparation des données
+
+Les 24 pays d'Europe sont identifiés par leur code iso (PAYS), leur appartenance aux pays socialistes ou capitalistes (BLOC), leur position spatiale (X,Y) et tout un ensemble de variables économpiques et sociale telles que le PNB par habitant (PNB), le taux de mortlaité infantile (TMI), l'espérance de vie à la naissance (ESP), le taux d'urbanisation (URB), le taux de natalité (NAT), le taux de mortalité (MOR), l'indice conjoncturel de fécondité (FEC), le \% de jeunes de 0-14 ans (JEU), le \% de vieux de 65 ans et plus (VIE), la superficie totale en milliers de kM2  (SUP) et la population totale en millions (POP).
+
+
+## Trouver le  fichier 
+
+Si vous avez créé un projet, celui-ci définit le répertoire de travail dans lequel seront lus ou écrit les fichiers. 
+
+```{r}
+# ---------------------------
+# (1) ESPACE DE TRAVAIL
+# ---------------------------
+# (1.1) Quel est le répertoire actuel ?
+getwd()
+```
+
+On repère ensuite le chemin de l'emplacement du dossier où se trouvent les données et on examine son contenu. Attention, contrairement à windows il faut toujours utiliser des slash (/) et non pas des antislash pour décrire les chemins d'accès des fichiers
+
+
+```{r}
+# (1.2) Choix du rÈpertoire contenant les donnÈes
+monchemin<-"data/euro1988"
+list.files(monchemin)
+
+```
+
+
+Nous allons maintenant essayer de charger le fichier de données 
+
+
+## Importer dans  R
+
+On utilise ici une procédure adaptée à la lecture de fichiers texte :  *read.table()*
+L'instruction *header=TRUE* signale que la première ligne donne le nom des variables
+L'instruction *dec="."* signale que les décimales sont représentées par des points et non pas des virgules.
+
+```{r}
+# --------------------------------------------------------
+# (2) IMPORTATION ET MISE EN FORME D'UN TABLEAU DE DONNEES
+# --------------------------------------------------------
+# (2.1) Importation d'un fichier .txt
+euro <- read.table("data/euro1988/euro1988.txt", 
+                   dec=".",
+                   header=TRUE)
+```
+
+
+Pour savoir si le chargement s'est bien passé on peut afficher le tableau en tapant son nom
+
+```{r}
+euro 
+```
+
+Mais on peut aussi se contenter d'afficher les premières lignes (*head*) ou les dernières lignes (*tail*) du tableau. Par exemple, pour voir les trois premières et les 5 dernières lignes : 
+
+```{r}
+head(euro,3)
+tail(euro,5)
+```
+
+
+
+## Ajouter le nom des lignes
+
+
+
+```{r}
+rownames(euro)<-euro$PAYS
+head(euro)
+```
+
+## Vérifier le type des variables
+
+
+
+```{r}
+str(euro)
+```
+
+## Modifier le type des variables
+
+```{r}
+euro$PAYS<-as.character(euro$PAYS)
+euro$BLOC<-as.factor(euro$BLOC)
+euro$PNB<-as.numeric(euro$PNB)
+euro$ESP<-as.numeric(euro$ESP)
+euro$URB<-as.numeric(euro$URB)
+euro$NAT<-as.numeric(euro$NAT)
+euro$MOR<-as.numeric(euro$MOR)
+euro$JEU<-as.numeric(euro$JEU)
+euro$VIE<-as.numeric(euro$VIE)
+euro$SUP<-as.numeric(euro$SUP)
+euro$POP<-as.numeric(euro$POP)
+euro$X<-as.numeric(euro$X)
+euro$Y<-as.numeric(euro$Y)
+str(euro)
+```
+
+## Effectuer un petit résumé statistique 
+
+```{r}
+
+```
+
+
+
+# Expliquer une variable quantitative (Y) par une variable qualitative (X) 
+
+
+## Analyser la variable qualitative (Y)
+
+
+```{r}
+# Analyse de la  variable qualitative (BLOC)
+#calcul des fréquences
+ 
+#diagramme en bâtons
+
+```
+
+## Analyser la variable quantitative (X)
+
+
+```{r}
+# Analyse de la variable quantitative (TMI)
+
+# calcul et visualisation des quantiles
+
+
+# calcul de la moyenne et de l'écart type
+
+
+# visualisation de l'histogramme
+
+
+
+```
+
+## Visualiser la distribution de Y en fonction de X
+
+Quelques outils pour analyser conjointement les deux distributions.
+
+```{r}
+# calcul et visualisation des quantiles
+
+
+
+#calcul de la moyenne et de l'écart type
+
+
+# visualisation des deux histogrammes
+
+
+
+ 
+
+```
+
+
+## Test de Student 
+
+
+```{r}
+# Test paramétrique d'égalité des moyennes de Student (inadapté)
+
+
+```
+
+
+
+## Test de Wilcoxon 
+
+
+```{r}
+# Test non paramétrique d'égalité des médianes de Wilcoxon (correct)
+
+
+```
+
+
+# Expliquer une variable quantitative (Y) par une variable quantitative (X)
+
+
+
+## Calcul du coefficient de Bravais Pearson
+
+Calculer la matrice des corrélations de Y et des variables X1..Xn pouvant l'expliquer
+
+```{r}
+# Coefficients de corrélation de pearson
+
+```
+
+
+## Test de significativité du coefficient de Pearson
+
+Tester la significativité de la relation entre Y et X1..Xn
+
+```{r, message=FALSE,}
+# Test du coefficient de corrélation de Peason
+
+
+
+```
+
+
+
+## Calcul et test du coeffience de Spearman
+
+Refaire les mêmes calculs avec le coefficient de Spearman
+
+```{r}
+# Coefficient de corrélation de Spearman
+
+
+# Test du cofficient de Spearman
+
+
+
+```
+
+
+## Modèle linéaire
+
+### Nuage de points 
+
+Faire un graphique croisant Y et la variable X retenue
+
+```{r}
+# Graphique X,Y
+
+```
+
+
+### Calcul du modèle
+
+```{r}
+# Equation de la régression Y - aX+b
+
+
+
+```
+
+ 
+### Graphique
+
+```{r}
+
+
+```
+
+
+
+## Modèle exponentiel log(Y) = aX+b
+
+### Corrélation
+
+```{r}
+
+
+
+
+```
+
+
+### Equation
+
+```{r}
+
+
+
+
+```
+
+ 
+### Graphique
+
+```{r}
+
+
+```
+
+## Modèle puissance : log(Y) = a.log(X)+b
+
+
+### Corrélation
+
+```{r}
+
+
+
+
+```
+
+
+### Equation
+
+```{r}
+
+
+
+
+```
+
+ 
+### Graphique
+
+```{r}
+
+
+```
+
+## Modèle segmenté
+
+
+### Pays socialistes
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+### Pays capitalistes
+
+```{r}
+
+
+
+
+
+
+
+
+
+```
+
+### Synthèse
+
+```{r}
+
+
+
+
+
+
+
+
+
+
+```
+
