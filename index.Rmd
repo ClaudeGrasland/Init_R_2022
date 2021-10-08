@@ -584,17 +584,17 @@ Et voilà : désormais notre tableau ne comporte plus que des variables de type 
 
 ### Enregistrement du tableau au format propre à R
 
-Il n'est pas forcément necessaire d'enregistrer ses données au format propre à R (*.rda*)s'il s'agit d'un petit tableau. Il suffit en effet de sauvegarder le programme que nous venons d'écrire et de l'executer chaque fois que nécessaire. Toutefois, il peut arriver que cette étape soit longue et dans ce cas la sauvegarde est utile.
+Il n'est pas forcément necessaire d'enregistrer ses données au format propre à R (*.RDS*)s'il s'agit d'un petit tableau. Il suffit en effet de sauvegarder le programme que nous venons d'écrire et de l'executer chaque fois que nécessaire. Toutefois, il peut arriver que cette étape soit longue et dans ce cas la sauvegarde est utile.
 
 ```{r}
-save(euro, file="data/euro1988/euro1988.rda")
+save(euro, file="data/euro1988/euro1988.RDS")
 ```
 
 on pourra ensuite facilement récupérer les données par la commande suivante
 
 
 ```{r}
-load("data/euro1988/euro1988.rda")
+load("data/euro1988/euro1988.RDS")
 ```
 
 
@@ -630,7 +630,7 @@ plot(euro$BLOC)
 
 ### Analyse de la distribution des taux de mortalité infantile (TMI)
 
-Quelques petites commandes pour camlculer les paramètres principaux de la mortalité infantile et la représenter.
+Quelques petites commandes pour calculer les paramètres principaux de la mortalité infantile et la représenter.
 
 ```{r}
 # Analyse de la variable quantitative (TMI)
@@ -663,11 +663,11 @@ tapply(euro$TMI, euro$BLOC, sd)
 # visualisation des deux histogrammes
 par(mfrow= c(2,1)) 
 hist(euro$TMI[euro$BLOC =="Soc"],
-#     xlim = c(0,50),
+    xlim = c(0,50),
      main="Pays Socialistes", 
      col="red") 
 hist(euro$TMI[euro$BLOC =="Cap"],
-#     xlim = c(0,50),
+    xlim = c(0,50),
      main="Pays Capitalistes",
      col="blue") 
 
@@ -774,6 +774,19 @@ cor(tab)
 ```
 
 R calcule par débaut le coefficient de corrélation linéaire de Bravais-Pearson qui varie entre -1 (corrélation négative parfaite) et +1 (corrélation positive parfaite). On peut ainsi voir que le taux de mortalité infantile (TMI) a une très forte corrélation positive avec l'indice conjonctuel de fécondité (+0.81) et une forte corrélation négative avec le PNB/hab (-0.68) ou le taux d'urbanisation (-0.65). La corrélationavec la population du pays est négative mais faible (-0.14).
+
+### Visualisation des nuages de points
+
+Une petite fonction graphique appelée `pairs()`permet de visualiser facilement les différents nuages de points correspondant à chaque paire de variable. On ajuste la taille de la sortie graphique avec `fig.width = ` et `fig.height = ` dans l'en-tête du chunk .
+
+```{r, fig.width = 6 , fig.height= 6 }
+pairs(tab)
+```
+
+
+
+
+
 
 ### Test de significativité d'un coefficient de corrélation
 
