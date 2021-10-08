@@ -462,6 +462,13 @@ Accrochez vos ceintures … on plonge directement dans un programme R qu’il s�
 
 On commence ici par un exemple où tout se passe bien et on utilise pour cela un exemple fétiche de l'enseignant, celui des pays d'Europe en 1988 à la veille de la chute du mur de Berlin. Exemple qui a été testé depuis 30 ans sur tous les logiciels de statistique possible (Lotus, Calc, SAS, XLSTAT, SPAD, ....). Il vous est recommandé d'avoir également un exemple fétiche sur lequel vous pourrez tester à votre tour le programme ci-dessous en l'adaptant.
 
+
+
+```{r}
+knitr::include_graphics("figures/coldwar.png")
+```
+
+
 Les 24 pays d'Europe sont identifiés par leur code iso (PAYS), leur appartenance aux pays socialistes ou capitalistes (BLOC), leur position spatiale (X,Y) et tout un ensemble de variables économpiques et sociale telles que le PNB par habitant (PNB), le taux de mortlaité infantile (TMI), l'espérance de vie à la naissance (ESP), le taux d'urbanisation (URB), le taux de natalité (NAT), le taux de mortalité (MOR), l'indice conjoncturel de fécondité (FEC), le \% de jeunes de 0-14 ans (JEU), le \% de vieux de 65 ans et plus (VIE), la superficie totale en milliers de kM2  (SUP) et la population totale en millions (POP).
 
 ## Définir un environnement de travail
