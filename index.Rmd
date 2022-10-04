@@ -1,6 +1,6 @@
 ---
 title: "Introduction à la statistique sous R"
-subtitle: "Mise à niveau M2 Géoprisme 2021"
+subtitle: "Mise à niveau M2 Géoprisme 2022"
 date: "`r Sys.Date()`"
 author: 
  - name: Claude Grasland
@@ -20,9 +20,7 @@ link-citations: true
 #giturl: "[![Code source on GitHub](https://badgen.net/badge/Code%20source%20on%20/GitHub/blue?icon=github)](xxx)"
 #doi: "[![DOI:xxx](https://zenodo.org/badge/DOI/xxx.svg)](https://doi.org/xxx)"
 ---
-```{r}
 
-```
 
 ```{r setup, include=FALSE}
 
@@ -62,13 +60,16 @@ Cela n'a l'air de rien, mais en procédant ainsi les étudiants apprennent à pr
 Bref, si tout a bien marché, l'étudiant n'aura même pas besoin de consulter le présent document, si ce n'est pour vérifier que son programme donne les mêmes résultats ...
 
 
-Les deux exercices qui suivent utilisent volontairement les fonctions de base du langage R (on dit que l'on *programme en R-base*) à l'exclusion de tout *package* c'est-à-dire de tout outil graphique ou statistique mis au point ultérieurement. 
+Les exercices qui suivent utilisent volontairement les fonctions de base du langage R (on dit que l'on *programme en R-base*) à l'exclusion de tout *package* c'est-à-dire de tout outil graphique ou statistique mis au point ultérieurement. 
 
 Par comparaison avec le jeu de lego, cela revient à effectuer des constructions avec la boîte de base. A première vue cela peut sembler frustrant. Mais en réalité cela ne bride en rien l'imagination et permet d'apprendre plein de choses sans être distrait ...
 
+## Données et exercices
+
+Vous pouvez télécharger les fichiers de données et d'exercice en cliquant sur [ce lien](https://github.com/ClaudeGrasland/Init_R_2021/raw/main/exos.zip).
 
 
-# R-BASE : Genèse
+# POURQUOI R ? 
 
 
 
@@ -456,7 +457,7 @@ En vous inspirant de l'exemple des stations services, essayez de définir un cer
 
 
 
-# R-BASE : Statistique bivariée I 
+# STAT. BIVARIEE : Y Quantitative 
 
 Accrochez vos ceintures … on plonge directement dans un programme R qu’il s’agit juste d’exécuter sans comprendre ce qui se passe pour avoir une idée des possibilités du logiciel mais aussi des difficultés. Vous êtes un peu comme un étranger qui entend parler une langue nouvelle et découvre de nouveaux mots et essaye de les reproduire comme dans la méthode Assimil … Evidemment ça ne marche pas à tous les coups. 
 
@@ -647,7 +648,7 @@ sd(euro$TMI)
 hist(euro$TMI)
 ```
 
-### Comaparaison de la mortalité infantile par bloc (BLOC*TMI)
+### Comparaison de la mortalité infantile par bloc (BLOC*TMI)
 
 Quelques outils pour analyser conjointement les deux distributions.
 
@@ -1025,193 +1026,370 @@ Essayez de reproduire la même analyse sur deux autres variables quantitatives d
 
 
 
-# R-BASE : Statistique bivariée II
+# STAT. BIVARIEE : Y Qualitative
 
 On suppose que vous avez acquis les premiers réflexes de programmation en R avec les variables quantitatives contenues dans le fichier Europe 1988. VOus y avez appris à expliquer une variable Y  quantitative par une variable X pouvant être soit qualitative (analyse de variance, test d'égalité des moyennes), soit quantitative (corrélation, régression)
 
-Dans ce deuxième module, on va essayer d'expliquer une variable qualitative Y par une autre variable qualitative X. On ne traitera pas directement le cas de l'explication d'une variable qualitative Y par une variable quantitative X, car il peut soit se ramener au cas déjà vu dans le cours précédent, soit se résoudre par une transformation de X en une variable X' qualitative.
-
-L'exemple utilisé ici est fondé sur une véritable enquête de terrain réalisée en 2003 par une étudiante de maitrise de Paris 7, anne-Gaëlle Monnier,à propos de l'électrification d'un village camerounais nommé Yemessoa. 
+Dans ce deuxième module, on va essayer d'expliquer une variable qualitative Y par une autre variable qualitative X. L'exemple utilisé ici est basée sur une grande enquête internationale réalisée dans plusieurs pays du Monde à intervalles réguliers : la [World Value Survey](https://www.worldvaluessurvey.org/WVSContents.jsp)
 
 
-## Définir un environnement de travail
+## Préparation des données
+
+### Chargement de packages
+
+Pour faciliter l'utilisation des données de ce questionnaire, nouus allons faire appel à un très joli package mis au point par Julien Barnier et Joseph Larmarange : `questionr` et un package plus international `labelled` :
+
+```{r}
+library(questionr)
+```
+
 
  
-
-### Définir un espace de travail
+### répertoire de travail
 
 
 On vérifie l'emplacement où l'on va trouver les données
 
-
 ```{r}
 # (1.2) Choix du rÈpertoire contenant les donnÈes
-monchemin<-"data/yemessoa"
+monchemin<-"data/wvs"
 list.files(monchemin)
 
 ```
 
 
-Nous allons maintenant essayer de charger le fichier de données 
+## Préparation des données
 
+Nous allons maintenant essayer de charger le fichier de données qui est au format interne de R avec l'extension .RDS puis sélectionner notre échantillon d'étude
 
-## Charger un tableau de données
+### Charger le tableau complet
 
-On utilise ici une procédure adaptée à la lecture de fichiers texte :  *read.table()*
-
-- L'instruction *header=TRUE* signale que la première ligne donne le nom des variables
-- L'instruction *sep = \t* signifie que le séparateur de colonne est une tabulation et non pas un point-virgule
-- L'instruction *dec=","* signale que les décimales sont représentées par des virgules et non pas des points comme dans le premier module. 
-- Linstruction *stringsAsFactors = TRUE* signifie que les variables de type character seront transformées automatiquement en factor. 
-
-### Importation d'un tableau
 
 ```{r}
-# --------------------------------------------------------
-# (2) IMPORTATION ET MISE EN FORME D'UN TABLEAU DE DONNEES
-# --------------------------------------------------------
-# (2.1) Importation d'un fichier .txt
-yem<-read.csv("data/yemessoa/yemessoa2005.txt", 
-              header=TRUE, 
-              sep="\t",
-              dec=",",
-              stringsAsFactors = T)
+don<-readRDS("data/wvs/wvs_sample.RDS")
+str(don)
 ```
 
 
 On affiche les premières lignes (*head*) ou les dernières lignes (*tail*) du tableau pour voir si le chargement s'est bien effectué : 
 
 ```{r}
-head(yem)
-tail(yem)
+head(don)
+tail(don)
+```
+
+### Liste des variables
+
+Les variable proposées sont les suivantes :
+
+- **pays** : Pays d'enquête
+- **year** : Année d'enquête
+- **wgt**  : Pondération (ech. représentatif)
+- **sex**  : Sexe
+- **age**  : Age
+- **gen**  : Génération
+- **job_man** : Priorité aux hommes en matière d'emploi lorsque ceux-ci sont rares (*Jobs scarce: Men should have more right to a job than women*)
+- **job_nat** : Priorité aux nationaux en matière d'emploi lorsque ceux-ci sont rares (*Jobs scarce: Employers should give priority to (nation) people than immigrants*)
+
+
+
+### Sélection d'un pays 
+
+On examine la liste complète des pays pour faire son choix
+
+```{r}
+table(don$pays)
+```
+
+Puis on en retient un, par exemple l'Allemagne et o n extrait les données : 
+
+```{r}
+sel<-don[don$pays == "Germany",]
 ```
 
 
-### Vérification du type des variables
+### Recodage des facteurs
 
-On a vu qu'on peut s'éviter beaucoup d'ennuis en contrôlant le type des variables qui a été attribué aux différentes colonnes par R lors de la lecture d'un fichier. Pour cela on commence par regarder quels sont les types de variables du tableau à l'aide de l'instruction *str()* :
+Les facteurs doivent être le plus souvent recodés, soit pour éliminer les non-réponses, soit pour fusionner entre elles des modalités qu'on juge équivalentes.
+
 
 ```{r}
-str(yem)
+levels(sel$sex) <- c(NA,NA,NA,NA, "Homme","Femme")
+levels(sel$job_man)<-c(NA,NA,NA,NA,"NSP","D'accord","Pas d'acccord","NSP")
+levels(sel$job_nat)<-c(NA,NA,NA,NA,"NSP","D'accord","Pas d'acccord","NSP")
 ```
 
-Il y a visiblement des erreurs de codage que l'on va corriger. 
+### Découpage des classes
 
-
+Les variables quantitatives peuvent de leur côté être découpées en classes, soit à partir de considérations quantitatives (e.g. classes d'âges de 10 ans) soit dans une perspective plus qualitative (e.g. générations situées avant ou après le Baby Boom)
 
 ```{r}
-yem$CODE<-as.character(yem$CODE)
-yem$CON3<-as.factor(yem$CON3)
-levels (yem$CON3)
-levels(yem$CON3)<-c("(0) : non connecté","(1) informel","(2) officiel")
-yem$DIST<-as.numeric(yem$DIST)
-str(yem)
+sel$age6<-cut(sel$age, breaks=c(15,29,39,49,59,69,110))
+levels(sel$age6)<-c("- de 25 ans",
+                    "30-39 ans",
+                    "40-49 ans",
+                    "50-59 ans",
+                    "60-69 ans",
+                    "70 ans et +")
+sel$gen4<-cut(sel$gen, breaks=c(1901,1944,1959,1974,2010))
+levels(sel$gen4)<- c("Pre-Boomer (< 1945)",
+                  "Boomer I (1945-1959)",
+                  "Boomer II (1960-74)",
+                 "Post-Boomer (> 1974)")
+
 ```
 
-Et voilà : désormais notre tableau est désormais cohérent. On pourra encore l'améliorer par la suite en transformant des variables quantitatives en variables qualitatives
+### Division en deux périodes
 
-
-
-### Un petit résumé statistique 
-
-La récompense d'une bonne définition du tableau est  d'obtenir pour chaque variable un résumé adapté à son type
+Nous avons retenu pour chaque pays deux vagues d'enquêtes : l'une récente et l'autre plus ancienne d'environ une génération
 
 ```{r}
-summary(yem)
+sel1<-sel[sel$year <2000,]
+sel2<-sel[sel$year>2000,]
 ```
 
-
-
-Avant d'aller plus loin, commentez rapidement ce tableau pour bien prendre connaissance de chacune des variables.
-
-
-
-## Mise en relation de deux variables qualitatives 
-
-Le niveau d'électrification des ménages (Y) est-il lié au genre du chef de ménage (X) ?
-
-Notre objectif est le même que dans le module précédent : chercher s'il existe une relation significative entre X et Y puis en décrire la forme.  
-
-### Analyse de la variable dépendante (Y)
-
-Deux petites commandes pour dénombrer l'effectif des classes et les représenter
+### Résumé
 
 ```{r}
-# Analyse de la  variable dépendante
-Y<-yem$CON2
-#calcul des fréquences
-summary(Y)
-#diagramme en bâtons
-plot(Y)
-```
-Commentaire : ...
-
-
-### Analyse de la variable indépendante (X)
-
-Même programme ...
-
-```{r}
-# Analyse de la  variable dépendante
-X<-yem$SEXE
-#calcul des fréquences
-summary(X)
-#diagramme en bâtons
-plot(X)
+summary(sel1)
+summary(sel2)
 ```
 
-Commentaire : ...
+## Evolution de l'opinion au cours du temps
 
-### Visualisation de la distribution croisée de Y et X
+### Création du tableau de contingence
 
 ```{r}
-plot(Y~X)
+X<-sel$year
+Y<-sel$job_man
+W<-sel$wgt
+tc<- wtd.table(X,Y,W)
+tc
 ```
 
-Commentaire : ...
-
-
-### Calcul du tableau de contingence et des trois tableaux de pourcentage associés
+### Profils en pourcentage
 
 ```{r}
-tabcont<-table(Y,X)
-tabcont
-prop.table(tabcont,margin=)
-prop.table(tabcont,margin=1)
-prop.table(tabcont,margin=2)
+lprop(tc)
+cprop(tc)
+prop(tc)
 ```
 
-Commentaire : ...
-
-
-### Calcul du tableau théorique et test du chi-2
+### Visualisation
 
 ```{r}
-test<-chisq.test(tabcont)
-test$observed
-test$expected
-test$residuals
+plot(tc,col=c("gray","yellow","orange"), main="Priorité au travail des hommes")
+```
+
+### Test du chi-2
+
+```{r}
+tk2 <- chisq.test(tc)
+tk2
+```
+
+### Résidus
+
+```{r}
+kable(tk2$observed, caption = "Valeurs observées")
+kable(tk2$expected, caption = "Valeurs théoriques")
+kable(tk2$observed-tk2$expected, caption = "Résidus bruts", digits=1)
+kable(tk2$residuals , caption = "Résidus standardisés", digits=2)
+```
+
+### Visualisation des écarts signifcatifs
+
+```{r}
+mosaicplot(tc, shade =TRUE)
+```
+
+## Variation selon le sexe
+
+### En 1997
+
+```{r}
+X<-sel1$sex
+Y<-sel1$job_man
+W<-sel1$wgt
+titre <- "Travail des femmes / Sexe (Allemagne, 1997)"
+
+# Tableau de contingence
+tc<- wtd.table(X,Y,W)
+kable(tc, caption= titre)
+      
+
+
+# Pourcentage en ligne
+kable(lprop(tc), caption = titre)
+
+
+# Test du chi2
+test <- chisq.test(tc)
 test
+
+# Graphiques
+
+plot(tc,col=rainbow(n=10),main=titre, sub = "Fréquences")
+
+mosaicplot(tc,shade=T,main = titre, sub="Résidus")
+
+
 ```
 
-Commentaire : ***
-
-
-### Une jolie figure pour interpréter la relation (si elle est significative)
-
+### En 2018
 
 ```{r}
-mosaicplot(~Y+X,
-  main = "Relation entre X et Y", shade = TRUE, legend = TRUE)
+X<-sel2$sex
+Y<-sel2$job_man
+W<-sel2$wgt
+titre <- "Travail des femmes / Sexe (Allemagne, 2018)"
+
+# Tableau de contingence
+tc<- wtd.table(X,Y,W)
+kable(tc, caption= titre)
+      
+
+
+# Pourcentage en ligne
+kable(lprop(tc), caption = titre)
+
+
+# Test du chi2
+test <- chisq.test(tc)
+test
+
+# Graphiques
+
+plot(tc,col=rainbow(n=10),main=titre, sub = "Fréquences")
+
+mosaicplot(tc,shade=T,main = titre, sub="Résidus")
+
 ```
 
+## Variation selon l'âge
+
+### En 1997
+
+```{r}
+X<-sel1$age6
+Y<-sel1$job_man
+W<-sel1$wgt
+titre <- "Travail des femmes / Âge (Allemagne, 1997)"
+
+# Tableau de contingence
+tc<- wtd.table(X,Y,W)
+kable(tc, caption= titre)
+      
 
 
-## Exercice 
+# Pourcentage en ligne
+kable(lprop(tc), caption = titre)
 
-Essayez de reproduire la même analyse sur deux autres variables qualitatives de votre choix. 
+
+# Test du chi2
+test <- chisq.test(tc)
+test
+
+# Graphiques
+
+plot(tc,col=rainbow(n=10),main=titre, sub = "Fréquences")
+
+mosaicplot(tc,shade=T,main = titre, sub="Résidus")
+
+```
+
+### En 2018
+
+```{r}
+X<-sel2$age6
+Y<-sel2$job_man
+W<-sel2$wgt
+titre <- "Travail des femmes / Âge (Allemagne, 2018)"
+
+# Tableau de contingence
+tc<- wtd.table(X,Y,W)
+kable(tc, caption= titre)
+      
 
 
+# Pourcentage en ligne
+kable(lprop(tc), caption = titre)
+
+
+# Test du chi2
+test <- chisq.test(tc)
+test
+
+# Graphiques
+
+plot(tc,col=rainbow(n=10),main=titre, sub = "Fréquences")
+
+mosaicplot(tc,shade=T,main = titre, sub="Résidus")
+
+```
+
+## Variation selon les générations
+
+### En 1997
+
+```{r}
+X<-sel1$gen4
+Y<-sel1$job_man
+W<-sel1$wgt
+
+titre <- "Travail des femmes / Génération (Allemagne, 1997)"
+
+# Tableau de contingence
+tc<- wtd.table(X,Y,W)
+kable(tc, caption= titre)
+      
+
+
+# Pourcentage en ligne
+kable(lprop(tc), caption = titre)
+
+
+# Test du chi2
+test <- chisq.test(tc)
+test
+
+# Graphiques
+
+plot(tc,col=rainbow(n=10),main=titre, sub = "Fréquences")
+
+mosaicplot(tc,shade=T,main = titre, sub="Résidus")
+
+```
+
+### En 2018
+
+```{r}
+X<-sel2$gen4
+Y<-sel2$job_man
+W<-sel2$wgt
+titre <- "Travail des femmes / Génération (Allemagne, 2018)"
+
+# Tableau de contingence
+tc<- wtd.table(X,Y,W)
+kable(tc, caption= titre)
+      
+
+
+# Pourcentage en ligne
+kable(lprop(tc), caption = titre)
+
+
+# Test du chi2
+test <- chisq.test(tc)
+test
+
+# Graphiques
+
+plot(tc,col=rainbow(n=10),main=titre, sub = "Fréquences")
+
+mosaicplot(tc,shade=T,main = titre, sub="Résidus")
+
+```
 
 
 
